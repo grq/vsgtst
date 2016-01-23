@@ -1,0 +1,38 @@
+html, body {
+	width: 100%;
+}
+
+.content {
+	width: 970px;
+	margin: auto;
+}
+.pagemask {
+    position: fixed;
+    width: 100vw;
+    top: 0;
+    left: 0;
+    height: 100vh;
+    background-color: grey;
+    opacity: 0;
+    z-index: -1;
+    transition: opacity 200ms linear, z-index 200ms linear;
+}
+
+.pagemask.visiblemask {
+    z-index: 1000;
+    opacity: 0.5;
+}
+
+.orders-table td:last-child {
+    text-align: right;
+}
+
+.orders-table td {
+    height: 50px;
+    vertical-align: middle !important;
+}
+
+.form-control,
+.input-group.date {
+    max-width: 200px;
+}

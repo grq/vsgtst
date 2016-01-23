@@ -1,0 +1,134 @@
+﻿<!DOCTYPE PUBLIC HTML>
+<html xmlns="http://www.w3.org/1999/xhtml" ng-app="ordersApp">
+<head>
+	<title>VSG Test Task</title>
+	<link href="Content/bootstrap.min.css" rel="stylesheet" />
+	<link href="Content/bootstrap-datepicker.min.css" rel="stylesheet" />
+	<link href="Content/site.css" rel="stylesheet" />
+</head>
+<body ng-controller="OrdersCtrl">
+	<header>
+		<h1 class="text-center">Vsg Test Task</h1>
+	</header>
+	<section class="content">
+        <form role="form" class="form-inline">
+            <label>Name</label>
+		    <input type="text" class="form-control" ng-model="newOrder.Name" />
+            <label>Status</label>
+            <select class="form-control" ng-model="newOrder.Status">
+                <option value="1">Open</option>
+                <option value="2">Pending</option>
+                <option value="3">Closed</option>
+            </select>
+            <label>Date</label>
+            <div class="input-group date" data-provide="datepicker-inline">
+                <input type="text" class="form-control" ng-model="newOrder.Date">
+                <div class="input-group-addon">
+                    <span class="glyphicon glyphicon-th"></span>
+                </div>
+            </div>
+            <button class="btn btn-primary" ng-click="addOrder()" ng-disabled="isAddButtonDisabled()">Add</button>
+        </form>
+		<hr />
+        
+		<table class="table table-condensed table-hover orders-table">
+			<thead>
+				<tr>
+					<th><label>Name</label></th>
+					<th><label>Status</label></th>
+					<th><label>Date</label></th>
+                    <th></th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr ng-repeat="order in orders | filter: textFilter track by $index"  ng-show="isShowOrder(order)" 
+                    ng-class="{success: order.Status === '1', info: order.Status === '2', warning: order.Status === '3'}">
+					<td>
+						<div ng-show="!isEditOrder(order.Id)">{{order.Name}}</div>
+                        <div ng-show="isEditOrder(order.Id)">
+							<input type="text" class="form-control" ng-model="editOrder.Name" />
+						</div>
+					</td>
+					<td>
+						<div ng-show="!isEditOrder(order.Id)">{{getStatus(order.Status)}}</div>
+                        <div ng-show="isEditOrder(order.Id)">
+                            <select class="form-control" ng-model="editOrder.Status">
+                                <option value="1">Open</option>
+                                <option value="2">Pending</option>
+                                <option value="3">Closed</option>
+                            </select>
+						</div>
+					</td>
+					<td>
+						<div ng-show="!isEditOrder(order.Id)">{{order.Date | date:'MM/dd/yyyy'}}</div>
+                        <div ng-show="isEditOrder(order.Id)">
+                            <div class="input-group date" data-provide="datepicker">
+                                <input type="text" class="form-control" ng-model="editOrder.Date">
+                                <div class="input-group-addon">
+                                    <span class="glyphicon glyphicon-th"></span>
+                                </div>
+                            </div>
+                        </div>
+					</td>
+                    <td>
+						<button class="btn btn-success btn-xs" ng-click="updateOrder(order.Id)" ng-show="isEditOrder(order.Id)" ng-disabled="isSaveButtonDisabled()">Save</button>
+						<button class="btn btn-info btn-xs" ng-click="toggleEdit(order)">{{ isEditOrder(order.Id) ? 'Cancel' : 'Edit' }}</button>
+						<button class="btn btn-danger btn-xs" ng-click="removeOrder(order.Id)" ng-show="!isEditOrder(order.Id)">Delete</button>
+					</td>
+				</tr>
+			</tbody>
+		</table>
+        
+		<div class="panel panel-default">
+			<div class="panel-heading">Filters</div>
+			<div class="container-fluid">
+                <div class="row">
+			        <section class="col-xs-3">
+				        <div class="radio">
+					        <label>
+						        <input type="radio" value="0" ng-model="statusFilter" />
+						        All <span class="label label-primary">{{ getOrderLength() }}</span>
+					        </label>
+				        </div>
+				        <div class="radio">
+					        <label>
+						        <input type="radio" value="1" ng-model="statusFilter" />
+						        Open <span class="label label-success">{{ getOrderLength('1') }}</span>
+					        </label>
+				        </div>
+				        <div class="radio">
+					        <label>
+						        <input type="radio" value="2" ng-model="statusFilter" />
+						        Pending <span class="label label-info">{{ getOrderLength('2') }}</span>
+					        </label>
+				        </div>
+				        <div class="radio">
+					        <label>
+						        <input type="radio" value="3" ng-model="statusFilter" />
+						        Closed <span class="label label-warning">{{ getOrderLength('3') }}</span>
+					        </label>
+				        </div>
+			        </section>
+			        <section class="col-xs-7 text-center">
+				        <div class="form-group form-inline">
+					        <label for="textFilter">Search</label>
+					        <input type="text" placeholder="search text" id="text1" class="form-control" ng-model="textFilter" />
+				        </div>
+			        </section>
+			        <section class="col-xs-2"></section>
+		        </div>
+            </div>
+        </div>
+
+        <div class="pagemask" ng-class="{ visiblemask: loading }"></div>
+
+		
+	</section>
+	
+    <script src="Scripts/jquery-1.9.1.min.js"></script>
+    <script src="Scripts/bootstrap-datepicker.min.js"></script>
+	<script src="Scripts/angular.js"></script>
+
+	<script src="appScripts/app.js"></script>
+</body>
+</html>
